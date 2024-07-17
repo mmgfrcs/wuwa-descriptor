@@ -11,6 +11,6 @@ export const load: PageLoad = (async (par) => {
     if (wep !== null && ["SWORD","BROADBLADE","RECTIFIER", "GUN", "GAUNTLET"].includes(wep)) 
         filter.push(`weapon = "${wep}"`)
 
-    let data = await pb.collection('characters').getFullList({sort: "+name", expand: "skills,chains", filter: filter.join(" && "), fetch: par.fetch})
+    let data = await pb.collection('characters').getFullList({sort: "+name", expand: "skills,chains", filter: filter.join(" && "), fetch: par.fetch, cache: "default"})
     return {entries: data}
 })
