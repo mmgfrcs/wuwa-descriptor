@@ -1,7 +1,17 @@
 <script>
   import "../app.css";
   import { pwaInfo } from 'virtual:pwa-info'; 
+  import { registerSW } from 'virtual:pwa-register';
   import { pwaAssetsHead } from 'virtual:pwa-assets/head';
+	import { onMount } from "svelte";
+
+  onMount(() => {
+    registerSW({
+      onRegisteredSW: (url) => {
+        console.log("Registered service worker")
+      }
+    })
+  })
 
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : '' 
 </script>
@@ -21,7 +31,7 @@
     <a href="/" class="btn btn-ghost text-xl">Wuthering Waves Descriptor</a>
   </div>
   <div class="flex-none">
-    <a href="https://github.com/mmgfrcs/wuwa-descriptor" target="_blank" class="btn btn-square btn-ghost p-2">
+    <a href="https://github.com/mmgfrcs/wuwa-descriptor" target="_blank" class="btn btn-square btn-ghost p-2" aria-label="Visit Github repo">
       <svg fill="currentColor" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
         <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
             <g id="Dribbble-Light-Preview" transform="translate(-140.000000, -7559.000000)" fill="currentColor">

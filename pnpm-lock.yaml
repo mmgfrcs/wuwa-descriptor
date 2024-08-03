@@ -101,6 +101,9 @@ importers:
       vitest:
         specifier: ^1.2.0
         version: 1.6.0(terser@5.31.3)
+      workbox-window:
+        specifier: ^7.1.0
+        version: 7.1.0
 
 packages:
 

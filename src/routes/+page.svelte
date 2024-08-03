@@ -47,6 +47,10 @@
 
 </script>
 
+<svelte:head>
+    <title>Wuthering Waves Descriptor</title>
+</svelte:head>
+
 <div class="container mx-auto">
     <div class="flex gap-4 mb-4 lg:flex-row flex-col">
         <div class="join join-horizontal">
@@ -111,7 +115,7 @@
             </div>
             <div class="collapse-content">
                 <img loading="lazy" alt="portrait" class="absolute opacity-10 bottom-0 right-0" src={pb.files.getUrl(d, d.portrait, {thumb: "1080x0"})} />
-                <div class="flex flex-col gap-2 py-4">
+                <div class="flex flex-col gap-2 py-6 px-4">
                     {#if d.expand && d.expand.skills}
                         <div class="flex mb-4 items-center">
                             <div class="flex-none basis-24">Level {level}</div>

@@ -8,6 +8,10 @@
 	$: level = 1
 </script>
 
+<svelte:head>
+    <title>{$page.data.char.name} - Wuthering Waves Descriptor</title>
+</svelte:head>
+
 <div class="relative">
 	<img alt="Banner" class="h-[800px] w-full object-cover img-mask" src={pb.files.getUrl($page.data.char, $page.data.char.bg)} />
 	<div class="ml-6 flex flex-col items-start gap-4 absolute -bottom-8">
