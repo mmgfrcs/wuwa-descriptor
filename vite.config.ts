@@ -26,7 +26,7 @@ export default defineConfig({
 			overrideManifestIcons: true,
 		},
 		workbox: {
-			globPatterns: ['/**/*.{html,js,css,ico,jpg,png,svg,webp,woff,woff2}']
+			globPatterns: ['/', '/@imagetools/*', '/*.{js,css,ico,jpg,png,svg,webp,woff,woff2}', '/**/*.{js,css,ico,jpg,png,svg,webp,woff,woff2}'],
 		},
 	})],
 	test: {
