@@ -25,9 +25,9 @@ export default defineConfig({
 			injectThemeColor: true,
 			overrideManifestIcons: true,
 		},
-		workbox: {
-			globPatterns: ['/', '/@imagetools/*', '/*.{js,css,ico,jpg,png,svg,webp,woff,woff2}', '/**/*.{js,css,ico,jpg,png,svg,webp,woff,woff2}'],
-		},
+		// workbox: {
+		// 	globPatterns: ['/src/*', '/*.{js,css,ico,jpg,png,svg,webp,woff,woff2}', '/**/*.{js,css,ico,jpg,png,svg,webp,woff,woff2}'],
+		// },
 	})],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
