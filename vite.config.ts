@@ -25,9 +25,31 @@ export default defineConfig({
 			injectThemeColor: true,
 			overrideManifestIcons: true,
 		},
-		// workbox: {
-		// 	globPatterns: ['/src/*', '/*.{js,css,ico,jpg,png,svg,webp,woff,woff2}', '/**/*.{js,css,ico,jpg,png,svg,webp,woff,woff2}'],
-		// },
+		workbox: {
+			runtimeCaching: [
+				{
+					urlPattern: /^https:\/\/wuwadesc\.pockethost\.io\/api\/files\/.*/i,
+					handler: 'NetworkFirst',
+					options: {
+						cacheName: 'cms-image-cache',
+						cacheableResponse: {
+							statuses: [0, 200]
+						}
+					}
+				},
+				{
+					urlPattern: /^https:\/\/wuwadesc\.pockethost\.io\/api\/collections\/.*/i,
+					handler: 'NetworkFirst',
+					options: {
+						cacheName: 'cms-data-cache',
+						cacheableResponse: {
+							statuses: [0, 200]
+						}
+					}
+				}
+			],
+			navigateFallback: null
+		},
 	})],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
