@@ -29,7 +29,7 @@ export default defineConfig({
 			runtimeCaching: [
 				{
 					urlPattern: /^https:\/\/wuwadesc\.pockethost\.io\/api\/files\/.*/i,
-					handler: 'NetworkFirst',
+					handler: 'StaleWhileRevalidate',
 					options: {
 						cacheName: 'cms-image-cache',
 						cacheableResponse: {
@@ -39,7 +39,7 @@ export default defineConfig({
 				},
 				{
 					urlPattern: /^https:\/\/wuwadesc\.pockethost\.io\/api\/collections\/.*/i,
-					handler: 'NetworkFirst',
+					handler: 'StaleWhileRevalidate',
 					options: {
 						cacheName: 'cms-data-cache',
 						cacheableResponse: {

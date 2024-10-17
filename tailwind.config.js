@@ -7,5 +7,9 @@ export default {
   plugins: [
     require('daisyui'),
   ],
+  daisyui: {
+    themes: ["winter", "dark"],
+  },
+  darkMode: ['class', '[data-theme="dark"]']
 }
 
