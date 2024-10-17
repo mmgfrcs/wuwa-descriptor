@@ -47,8 +47,12 @@
   ],
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/util/script1.js",
+      "destination": "/_vercel/insights/script.js"
+    },
+    {
+      "source": "/util/script2.js",
+      "destination": "/_vercel/speed-insights/script.js"
     }
   ]
 }

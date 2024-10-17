@@ -5,6 +5,7 @@
   import { pwaAssetsHead } from 'virtual:pwa-assets/head';
 	import { onMount } from "svelte";
   import { themeChange } from 'theme-change'
+  import { dev } from '$app/environment'
 
   $: darkMode = true;
 
@@ -35,6 +36,13 @@
 	  <link {...link} />
 	{/each}
  	{@html webManifestLink} 
+  {#if !dev}
+    <script>
+      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script src="/util/script1.js" />
+    <script src="/util/script2.js" />
+  {/if}
 </svelte:head>
 
 <nav class="navbar bg-base-100 py-4">
