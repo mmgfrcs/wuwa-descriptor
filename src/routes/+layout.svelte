@@ -6,8 +6,7 @@
 	import { onMount } from "svelte";
   import { themeChange } from 'theme-change'
   import { dev } from '$app/environment'
-
-  $: darkMode = true;
+  import lightMode from '$lib/stores/lightmode'
 
   onMount(() => {
     useRegisterSW({
@@ -22,10 +21,10 @@
     })
 
     themeChange(false)
-    darkMode = document.documentElement.dataset.theme === "dark"
   })
 
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : '' 
+  
 </script>
 
 <svelte:head> 
@@ -52,7 +51,7 @@
   <div class="flex-none">
     <label class="swap swap-rotate">
       <!-- this hidden checkbox controls the state -->
-      <input type="checkbox" data-toggle-theme="dark,winter" data-act-class="ACTIVECLASS" checked={!darkMode} />
+      <input type="checkbox" value="winter" class="theme-controller" bind:checked={$lightMode} />
       <!-- moon icon -->
       <svg
         class="swap-off h-10 w-10 fill-current"

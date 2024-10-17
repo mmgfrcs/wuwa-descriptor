@@ -5,7 +5,8 @@
 	import type { ChangeEventHandler, MouseEventHandler } from 'svelte/elements';
 	import type { Character } from '$lib/models/character';
     import type {PageData} from "./$types"
-	import { onMount } from 'svelte';
+	import lightMode from '$lib/stores/lightmode';
+    import { slide } from 'svelte/transition'
 
     $: showModifiedDescription = true
     $: level = 1
@@ -64,19 +65,19 @@
         </div>
         <div class="join join-horizontal">
             <button class="btn join-item" class:btn-primary={filters.includes("BROADBLADE")} on:click={onFilterClick("BROADBLADE")}>
-                <enhanced:img class="inline w-8 rounded-full" alt="Icon" src="$lib/assets/weapons/broadblade.png?enhanced" />
+                <enhanced:img class="inline w-8 rounded-full" class:invert={$lightMode && !filters.includes("BROADBLADE")} alt="Icon" src="$lib/assets/weapons/broadblade.png?enhanced" />
             </button>
             <button class="btn join-item" class:btn-primary={filters.includes("GAUNTLET")} on:click={onFilterClick("GAUNTLET")}>
-                <enhanced:img class="inline w-8 rounded-full" alt="Icon" src="$lib/assets/weapons/gauntlet.png?enhanced" />
+                <enhanced:img class="inline w-8 rounded-full" class:invert={$lightMode && !filters.includes("GAUNTLET")} alt="Icon" src="$lib/assets/weapons/gauntlet.png?enhanced" />
             </button>
             <button class="btn join-item" class:btn-primary={filters.includes("GUN")} on:click={onFilterClick("GUN")}>
-                <enhanced:img class="inline w-8 rounded-full" alt="Icon" src="$lib/assets/weapons/gun.png?enhanced" />
+                <enhanced:img class="inline w-8 rounded-full" class:invert={$lightMode && !filters.includes("GUN")} alt="Icon" src="$lib/assets/weapons/gun.png?enhanced" />
             </button>
             <button class="btn join-item" class:btn-primary={filters.includes("RECTIFIER")} on:click={onFilterClick("RECTIFIER")}>
-                <enhanced:img class="inline w-8 rounded-full" alt="Icon" src="$lib/assets/weapons/rectifier.png?enhanced" />
+                <enhanced:img class="inline w-8 rounded-full" class:invert={$lightMode && !filters.includes("RECTIFIER")} alt="Icon" src="$lib/assets/weapons/rectifier.png?enhanced" />
             </button>
             <button class="btn join-item" class:btn-primary={filters.includes("SWORD")} on:click={onFilterClick("SWORD")}>
-                <enhanced:img class="inline w-8 rounded-full" alt="Icon" src="$lib/assets/weapons/sword.png?enhanced" />
+                <enhanced:img class="inline w-8 rounded-full" class:invert={$lightMode && !filters.includes("SWORD")} alt="Icon" src="$lib/assets/weapons/sword.png?enhanced" />
             </button>
         </div>
         <div class="join join-horizontal">
@@ -95,12 +96,13 @@
                     type="button"
                     class={`${selectedCharId === d.id ? "bg-primary text-primary-content" : "bg-base-200"} card card-side shadow-xl p-4 transition`} 
                     data-charid={d.id} 
+                    transition:slide
                     on:click={onCheckClick}>
                         <figure>
                             <img loading="lazy" class="inline w-12 mr-4" alt="Icon" src={pb.files.getUrl(d, d.icon, {thumb: "128x0"})} />
                         </figure>
                         <div class="card-body p-0 self-center">
-                            <h2 class="card-title text-2xl">
+                            <h2 class="card-title text-2xl overflow-x-hidden">
                                 <a href={`/${d.id}`} class="link link-hover">
                                     <span>{d.name}</span>
                                 </a>
@@ -109,7 +111,7 @@
                                     <enhanced:img loading="lazy" class="inline w-10 rounded-full" alt="Icon" src={src} />
                                 {/await}
                                 {#await import(`$lib/assets/weapons/${d.weapon.toLowerCase()}.png?enhanced`) then { default: src }}
-                                    <enhanced:img loading="lazy" class="inline w-10 rounded-full" alt="Icon" src={src} />
+                                    <enhanced:img loading="lazy" class="inline w-10 rounded-full" class:invert={$lightMode && selectedCharId !== d.id} alt="Icon" src={src} />
                                 {/await}
                             </h2>
                         </div>
@@ -119,6 +121,7 @@
         {#if selectedChar}
             <div class="flex-1 flex flex-col gap-4 basis-1/4">
                 {#if selectedChar.expand && selectedChar.expand.skills}
+                    <h3 class="text-3xl my-4 mx-2">{selectedChar.name}</h3>
                     <div class="flex m-4 items-center">
                         <div class="flex-none basis-24">Level {level}</div>
                         <input type="range" min="1" max="2" bind:value={level} class="range range-secondary range-sm" />
@@ -142,6 +145,24 @@
                             <div class="divider"></div>
                         {/if}
                     {/each}
+                {:else}
+                    <div role="alert" class="alert alert-warning">
+                        <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6 shrink-0 stroke-current"
+                        fill="none"
+                        viewBox="0 0 24 24">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div>
+                            <h3 class="font-bold text-xl">Description Unavailable</h3>
+                            <div class="text-base">This is usually caused by the character being unreleased yet, but it could also be that the skills haven't been updated yet.</div>
+                        </div>
+                    </div>
                 {/if}
             </div>
         {/if}
