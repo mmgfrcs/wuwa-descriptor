@@ -26,6 +26,7 @@ export default defineConfig({
 			overrideManifestIcons: true,
 		},
 		workbox: {
+			globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,webmanifest,avif}', 'prerendered/**/*.html'],
 			runtimeCaching: [
 				{
 					urlPattern: /^https:\/\/wuwadesc\.pockethost\.io\/api\/files\/.*/i,

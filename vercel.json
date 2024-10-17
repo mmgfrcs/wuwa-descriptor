@@ -48,11 +48,11 @@
   "rewrites": [
     {
       "source": "/util/script1.js",
-      "destination": "/_vercel/insights/script.js"
+      "destination": "https://wuwa-descriptor.vercel.app/_vercel/insights/script.js"
     },
     {
       "source": "/util/script2.js",
-      "destination": "/_vercel/speed-insights/script.js"
+      "destination": "https://wuwa-descriptor.vercel.app/_vercel/speed-insights/script.js"
     }
   ]
 }
