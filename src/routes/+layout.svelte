@@ -42,6 +42,7 @@
     <script src="/util/script1.js" />
     <script src="/util/script2.js" />
   {/if}
+  <meta name="description" content="Describe Wuthering Waves Character Skills better." />
 </svelte:head>
 
 <nav class="navbar bg-base-100 py-4">

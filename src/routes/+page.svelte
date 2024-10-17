@@ -20,7 +20,6 @@
     let selectedChar: Character | undefined = undefined
     
     let onCheckClick: ChangeEventHandler<HTMLElement> = function(e) {
-        console.log("Event!")
         selectedCharId = e.currentTarget.dataset.charid as string
         selectedChar = data.entries.find((x: { id: string; })=>x.id === selectedCharId)
     }
@@ -103,7 +102,7 @@
                         </figure>
                         <div class="card-body p-0 self-center">
                             <h2 class="card-title text-2xl overflow-x-hidden">
-                                <a href={`/${d.id}`} class="link link-hover">
+                                <a href={`/${d.id}`} on:click={e=>e.stopPropagation()} class="link link-hover">
                                     <span>{d.name}</span>
                                 </a>
                                 •

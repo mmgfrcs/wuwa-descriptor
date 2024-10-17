@@ -13,6 +13,7 @@ export default defineConfig({
 		},
 		manifest: {
 			name: "Wuthering Waves Descriptor",
+			description: "Describe Wuthering Waves Character Skills better.",
 			short_name: "WuWa Descriptor",
 			theme_color: "#7582ff",
 			background_color: "#1d232a",
@@ -26,6 +27,7 @@ export default defineConfig({
 			overrideManifestIcons: true,
 		},
 		workbox: {
+			clientsClaim: true,
 			globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,webmanifest,avif}', 'prerendered/**/*.html'],
 			runtimeCaching: [
 				{
@@ -33,6 +35,12 @@ export default defineConfig({
 					handler: 'StaleWhileRevalidate',
 					options: {
 						cacheName: 'cms-image-cache',
+						backgroundSync: {
+							name: 'cms-img-sync',
+							options: {
+								maxRetentionTime: 24*60
+							}
+						},
 						cacheableResponse: {
 							statuses: [0, 200]
 						}
@@ -43,13 +51,30 @@ export default defineConfig({
 					handler: 'StaleWhileRevalidate',
 					options: {
 						cacheName: 'cms-data-cache',
+						backgroundSync: {
+							name: 'cms-data-sync',
+							options: {
+								maxRetentionTime: 24*60
+							}
+						},
 						cacheableResponse: {
 							statuses: [0, 200]
 						}
 					}
-				}
+				},
+				{
+					urlPattern: /\.*/,
+					handler: 'CacheFirst',
+					options: {
+						cacheName: 'site-cache',
+						cacheableResponse: {
+							statuses: [0, 200]
+						}
+					}
+				},
 			],
-			navigateFallback: null
+			navigationPreload: true,
+			navigateFallback: null,
 		},
 	})],
 	test: {
