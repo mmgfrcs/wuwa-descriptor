@@ -5,7 +5,6 @@
   import { pwaAssetsHead } from 'virtual:pwa-assets/head';
 	import { onMount } from "svelte";
   import { themeChange } from 'theme-change'
-  import { dev } from '$app/environment'
   import lightMode from '$lib/stores/lightmode'
 
   onMount(() => {
@@ -35,13 +34,6 @@
 	  <link {...link} />
 	{/each}
  	{@html webManifestLink} 
-  {#if !dev}
-    <script>
-      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-    </script>
-    <script src="/util/script1.js" />
-    <script src="/util/script2.js" />
-  {/if}
   <meta name="description" content="Describe Wuthering Waves Character Skills better." />
 </svelte:head>
 
