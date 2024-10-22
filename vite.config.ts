@@ -64,7 +64,7 @@ export default defineConfig({
 				},
 				{
 					urlPattern: /\.*/,
-					handler: 'CacheFirst',
+					handler: 'NetworkFirst',
 					options: {
 						cacheName: 'site-cache',
 						cacheableResponse: {

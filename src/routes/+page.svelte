@@ -13,7 +13,9 @@
     
     export let data: PageData
 
+    let filters: string[]
     $: filters = <string[]>[]
+    let filteredData: Character[]
     $: filteredData = data.entries.filter(x=>filters.length <= 0 || filters.includes(x.element) || filters.includes(x.weapon))
     
     let selectedCharId: string = ""
@@ -34,6 +36,7 @@
             filters = filters //Reactivity
         }
     }
+
 </script>
 
 <svelte:head>
@@ -102,16 +105,24 @@
                         </figure>
                         <div class="card-body p-0 self-center">
                             <h2 class="card-title text-2xl overflow-x-hidden">
-                                <a href={`/${d.id}`} on:click={e=>e.stopPropagation()} class="link link-hover">
+                                <a href={`/characters/${d.id}`} on:click={e=>e.stopPropagation()} class="link link-hover">
                                     <span>{d.name}</span>
                                 </a>
                                 •
                                 {#await import(`$lib/assets/elements/${d.element.toLowerCase()}.png?enhanced`) then { default: src }}
-                                    <enhanced:img loading="lazy" class="inline w-10 rounded-full" alt="Icon" src={src} />
+                                    <enhanced:img loading="lazy" class="inline w-10 min-w-10 rounded-full" alt="Icon" src={src} />
                                 {/await}
                                 {#await import(`$lib/assets/weapons/${d.weapon.toLowerCase()}.png?enhanced`) then { default: src }}
-                                    <enhanced:img loading="lazy" class="inline w-10 rounded-full" class:invert={$lightMode && selectedCharId !== d.id} alt="Icon" src={src} />
+                                    <enhanced:img loading="lazy" class="inline w-10 min-w-10 rounded-full" class:invert={$lightMode && selectedCharId !== d.id} alt="Icon" src={src} />
                                 {/await}
+                                {#if !d.expand || !d.expand.skills || d.expand.skills.length == 0}
+                                    <div class="badge badge-error">Empty</div>
+                                {:else if d.expand.skills.findIndex(x=>!x.status || x.status == "TODO") != -1}
+                                    <div class="badge badge-error">TODO</div>
+                                {:else if d.expand.skills.findIndex(x=>x.status == "DRAFT") != -1}
+                                    <div class="badge badge-warning">Draft</div>
+                                {/if}
+                                
                             </h2>
                         </div>
                 </button>
@@ -131,7 +142,15 @@
                                 <img loading="lazy" alt="Icon" src={pb.files.getUrl(sk, sk.icons[0], {thumb: "128x0"})} />
                             </div>
                             <div class="flex flex-col gap-2">
-                                <h3 class="text-2xl">{sk.name} • <span class="text-xl">{getSkillTypeString(sk.type)}</span></h3>
+                                <h3 class="text-2xl">
+                                    {sk.name} • <span class="text-xl">{getSkillTypeString(sk.type)}</span>
+                                    {#if sk.status != "OK"}
+                                        <div 
+                                            class="badge" 
+                                            class:badge-error={!sk.status || sk.status == "TODO"}
+                                            class:badge-warning={sk.status == "DRAFT"}>{sk.status || "TODO"}</div>
+                                    {/if}
+                                </h3>
                                 
                                 {#if showModifiedDescription}
                                     {@html Handlebars.compile(processDescription(sk.description))({...sk.values, level})}

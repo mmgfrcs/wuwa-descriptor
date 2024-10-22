@@ -19,6 +19,7 @@ export type Skill = RecordModel & {
   character: string,
   icons: string[],
   type: string,
+  status: string,
   description: string,
   original_description: string,
   values: object,

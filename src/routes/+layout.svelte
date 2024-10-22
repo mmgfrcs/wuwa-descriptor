@@ -86,7 +86,7 @@
 
 <slot />
 
-<footer class="footer footer-center bg-base-300 text-base-content p-4">
+<footer class="footer footer-center bg-base-300 text-base-content p-4 mt-6">
   <aside>
     <p>Copyright © 2024 Wuthering Waves Descriptor</p>
   </aside>
