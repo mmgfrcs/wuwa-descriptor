@@ -27,7 +27,7 @@ export default defineConfig({
 			overrideManifestIcons: true,
 		},
 		workbox: {
-			clientsClaim: true,
+			cleanupOutdatedCaches: true,
 			globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,webmanifest,avif}', 'prerendered/**/*.html'],
 			runtimeCaching: [
 				{

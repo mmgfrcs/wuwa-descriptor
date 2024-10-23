@@ -43,7 +43,7 @@
     <title>Wuthering Waves Descriptor</title>
 </svelte:head>
 
-<div class="container mx-auto pb-6">
+<main class="container mx-auto pb-6">
     <div class="flex gap-4 mb-4 lg:flex-row flex-col">
         <div class="join join-horizontal">
             <button class="btn join-item" class:btn-primary={filters.includes("AERO")} on:click={onFilterClick("AERO")}>
@@ -105,7 +105,7 @@
                         </figure>
                         <div class="card-body p-0 self-center">
                             <h2 class="card-title text-2xl overflow-x-hidden">
-                                <a href={`/characters/${d.id}`} on:click={e=>e.stopPropagation()} class="link link-hover">
+                                <a href={`/characters/${d.id}`} on:click={e=>e.stopPropagation()} class="link link-hover text-left">
                                     <span>{d.name}</span>
                                 </a>
                                 •
@@ -117,6 +117,7 @@
                                 {/await}
                                 {#if !d.expand || !d.expand.skills || d.expand.skills.length == 0}
                                     <div class="badge badge-error">Empty</div>
+                                    <div class="badge badge-error">TODO</div>
                                 {:else if d.expand.skills.findIndex(x=>!x.status || x.status == "TODO") != -1}
                                     <div class="badge badge-error">TODO</div>
                                 {:else if d.expand.skills.findIndex(x=>x.status == "DRAFT") != -1}
@@ -139,7 +140,7 @@
                     {#each selectedChar.expand.skills as sk, idx (sk.id)}
                         <div class="flex flex-row gap-6">
                             <div class="basis-24 flex-none rounded-xl">
-                                <img loading="lazy" alt="Icon" src={pb.files.getUrl(sk, sk.icons[0], {thumb: "128x0"})} />
+                                <img loading="lazy" alt="Icon" class:invert={$lightMode} src={pb.files.getUrl(sk, sk.icons[0], {thumb: "128x0"})} />
                             </div>
                             <div class="flex flex-col gap-2">
                                 <h3 class="text-2xl">
@@ -185,4 +186,4 @@
             </div>
         {/if}
     </div>
-</div>
+</main>

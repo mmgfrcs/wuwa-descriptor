@@ -4,22 +4,35 @@
   import { useRegisterSW } from 'virtual:pwa-register/svelte';
   import { pwaAssetsHead } from 'virtual:pwa-assets/head';
 	import { onMount } from "svelte";
-  import { themeChange } from 'theme-change'
   import lightMode from '$lib/stores/lightmode'
 
   onMount(() => {
     useRegisterSW({
       immediate: true,
-      onRegistered: (r) => {
-        r && setInterval(() => {
+      onRegisteredSW: (url, r) => {
+        r && setInterval(async () => {
           console.log(`Checking service worker update`)
-          r.update()
+          if (r.installing || !navigator)
+            return
+
+          if (('connection' in navigator) && !navigator.onLine)
+            return
+
+          const resp = await fetch(url, {
+            cache: 'no-store',
+            headers: {
+              'cache': 'no-store',
+              'cache-control': 'no-cache',
+            },
+          })
+          if (resp?.status === 200)
+            await r.update()
+
+            console.log(`Service worker update complete`)
         }, 30000)
-        console.log(`Registered service worker ${r}`)
+        console.log(`Registered service worker ${url}`)
       }
     })
-
-    themeChange(false)
   })
 
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : '' 
@@ -39,7 +52,7 @@
 
 <nav class="navbar bg-base-100 py-4">
   <div class="flex-1">
-    <a href="/" class="btn btn-ghost text-xl">Wuthering Waves Descriptor</a>
+    <a href="/" class="btn btn-ghost text-xl">Wuthering Waves Descriptor <div class="badge badge-outline">1.3</div></a>
   </div>
   <div class="flex-none">
     <label class="swap swap-rotate">
