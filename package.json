@@ -17,6 +17,8 @@
 	"devDependencies": {
 		"@playwright/test": "^1.48.1",
 		"@sveltejs/adapter-auto": "^3.2.5",
+		"@sveltejs/adapter-static": "^3.0.5",
+		"@sveltejs/adapter-vercel": "^5.4.5",
 		"@sveltejs/enhanced-img": "^0.3.9",
 		"@sveltejs/kit": "^2.7.1",
 		"@sveltejs/vite-plugin-svelte": "^3.1.2",
