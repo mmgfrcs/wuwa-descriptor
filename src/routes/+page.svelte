@@ -7,6 +7,7 @@
     import type {PageData} from "./$types"
 	import lightMode from '$lib/stores/lightmode';
     import { slide } from 'svelte/transition'
+	import { goto } from '$app/navigation';
 
     $: showModifiedDescription = true
     $: level = 1
@@ -105,7 +106,7 @@
                         </figure>
                         <div class="card-body p-0 self-center">
                             <h2 class="card-title text-2xl overflow-x-hidden">
-                                <a href={`/characters/${d.id}`} on:click={e=>e.stopPropagation()} class="link link-hover text-left">
+                                <a href={`/characters/${d.id}`} on:click|stopPropagation|preventDefault={x=> goto(`/characters/${d.id}`)} class="link link-hover text-left">
                                     <span>{d.name}</span>
                                 </a>
                                 •
