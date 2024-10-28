@@ -24,7 +24,7 @@ export default defineConfig({
 			preset: "minimal-2023",
 			image: "static/favicon.png",
 			injectThemeColor: true,
-			overrideManifestIcons: true,
+			overrideManifestIcons: true
 		},
 		workbox: {
 			cleanupOutdatedCaches: true,
@@ -79,5 +79,8 @@ export default defineConfig({
 	})],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
+	},
+	define: {
+		BUILD_DATE: new Date()
 	}
 });

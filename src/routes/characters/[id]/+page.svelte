@@ -13,8 +13,8 @@
 </svelte:head>
 
 <div class="relative">
-	<img alt="Banner" class="h-[800px] w-full object-cover img-mask" src={pb.files.getUrl($page.data.char, $page.data.char.bg)} />
-	<div class="ml-6 flex flex-col items-start gap-4 absolute -bottom-8">
+	<img alt="Banner" class="h-[100vh] w-full object-cover img-mask" src={pb.files.getUrl($page.data.char, $page.data.char.bg)} />
+	<div class="ml-6 flex flex-col items-start gap-4 absolute bottom-8">
 		<img alt="Icon" class="flex-initial" src={pb.files.getUrl($page.data.char, $page.data.char.icon, {thumb: "192x0"})} />
 		<div class="flex flex-row items-center gap-2">
 			<h1 class="text-5xl">{$page.data.char.name}</h1>
@@ -30,13 +30,16 @@
 	</div>
 </div>
 
-<div class="flex flex-col gap-4 py-4 mt-20 mb-8 mx-4">
+<div class="flex flex-col gap-4 py-4 mb-8 mx-4">
 	<h2 class="text-3xl">Skills</h2>
-	<div class="btn">
-		Original
-		<input type="checkbox" class="toggle toggle-accent" bind:checked={showModifiedDescription}/>
-		Modified
+	<div class="join join-horizontal">
+		<div class="btn join-item">
+			Original
+			<input type="checkbox" class="toggle toggle-accent" bind:checked={showModifiedDescription}/>
+			Modified
+		</div>
 	</div>
+	
 	{#if $page.data.char.expand && $page.data.char.expand.skills}
 		<div class="flex mb-4 mx-8 items-center">
 				<div class="flex-none basis-24">Level {level}</div>
@@ -45,16 +48,16 @@
 		{#each $page.data.char.expand.skills as sk, idx (sk.id)}
 				<div class="flex flex-row gap-6">
 						<div class="basis-24 flex-none rounded-xl">
-								<img loading="lazy" alt="Icon" src={pb.files.getUrl(sk, sk.icons[0], {thumb: "128x0"})} />
+							<img loading="lazy" alt="Icon" src={pb.files.getUrl(sk, sk.icons[0], {thumb: "128x0"})} />
 						</div>
-						<div class="flex flex-1 flex-col gap-2">
-								<h3 class="text-2xl">{sk.name} • <span class="text-xl">{getSkillTypeString(sk.type)}</span></h3>
-								
-								{#if showModifiedDescription}
-										{@html Handlebars.compile(processDescription(sk.description))({...sk.values, level})}
-								{:else}
-										{@html Handlebars.compile(processDescription(sk.original_description))({...sk.values, level})}
-								{/if}
+						<div class="flex flex-1 flex-col gap-2 description">
+							<h3 class="text-2xl">{sk.name} • <span class="text-xl">{getSkillTypeString(sk.type)}</span></h3>
+							
+							{#if showModifiedDescription}
+									{@html Handlebars.compile(processDescription(sk.description))({...sk.values, level})}
+							{:else}
+									{@html Handlebars.compile(processDescription(sk.original_description))({...sk.values, level})}
+							{/if}
 						</div>
 						<div class="flex basis-1/3 flex-none flex-col gap-2">
 							<h3 class="text-2xl">Gameplay Notes</h3>

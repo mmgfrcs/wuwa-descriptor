@@ -8,5 +8,5 @@ export const prerender = true
 export const GET: RequestHandler = async () => {
     return json(await pb
         .collection('characters')
-        .getFullList<Character>({sort: "+name", expand: "skills,chains", fetch: fetch, cache: "default"}))
+        .getFullList<Character>({sort: "+name", expand: "skills,chains", fetch: fetch, cache: "force-cache"}))
 };

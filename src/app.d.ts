@@ -18,6 +18,8 @@ declare global {
 	
 		export const metadata: Record<string, unknown>
 	}
+	
+	declare const BUILD_DATE: string
 }
 
 export {};

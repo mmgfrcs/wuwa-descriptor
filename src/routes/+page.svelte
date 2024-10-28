@@ -6,8 +6,9 @@
 	import type { Character } from '$lib/models/character';
     import type {PageData} from "./$types"
 	import lightMode from '$lib/stores/lightmode';
-    import { slide } from 'svelte/transition'
+    import { fly } from 'svelte/transition'
 	import { goto } from '$app/navigation';
+	import { flip } from 'svelte/animate';
 
     $: showModifiedDescription = true
     $: level = 1
@@ -45,7 +46,10 @@
 </svelte:head>
 
 <main class="container mx-auto pb-6">
+    <!-- svelte-ignore missing-declaration -->
+    <h2 class="mb-4 ml-2">Last Updated at {new Date(BUILD_DATE).toLocaleString("en-UK")}</h2>
     <div class="flex gap-4 mb-4 lg:flex-row flex-col">
+        
         <div class="join join-horizontal">
             <button class="btn join-item" class:btn-primary={filters.includes("AERO")} on:click={onFilterClick("AERO")}>
                 <enhanced:img class="inline w-8 rounded-full" alt="Icon" src="$lib/assets/elements/aero.png?enhanced" />
@@ -93,20 +97,22 @@
     </div>
 
     <div class="flex flex-row gap-12">
-        <div class="flex-1 flex flex-col gap-4 transition-all">
+        <div class="flex flex-col gap-4" class:flex-1={selectedCharId == ""} class:flex-none={selectedCharId != ""}>
             {#each filteredData as d (d.id)}
                 <button 
                     type="button"
-                    class={`${selectedCharId === d.id ? "bg-primary text-primary-content" : "bg-base-200"} card card-side shadow-xl p-4 transition`} 
+                    class={`${selectedCharId === d.id ? "bg-primary text-primary-content" : "bg-base-200"} card card-side shadow-xl p-4`} 
                     data-charid={d.id} 
-                    transition:slide
+                    out:fly={{x: 100}}
+                    in:fly={{delay: 200, x: -100}}
+                    animate:flip={{duration: 400}}
                     on:click={onCheckClick}>
                         <figure>
                             <img loading="lazy" class="inline w-12 mr-4" alt="Icon" src={pb.files.getUrl(d, d.icon, {thumb: "128x0"})} />
                         </figure>
                         <div class="card-body p-0 self-center">
                             <h2 class="card-title text-2xl overflow-x-hidden">
-                                <a href={`/characters/${d.id}`} on:click|stopPropagation|preventDefault={x=> goto(`/characters/${d.id}`)} class="link link-hover text-left">
+                                <a href={`/characters/${d.id}`} on:click|stopPropagation|preventDefault={x=> goto(`/characters/${d.id}`)} class="link link-hover text-left overflow-hidden">
                                     <span>{d.name}</span>
                                 </a>
                                 •
@@ -143,7 +149,7 @@
                             <div class="basis-24 flex-none rounded-xl">
                                 <img loading="lazy" alt="Icon" class:invert={$lightMode} src={pb.files.getUrl(sk, sk.icons[0], {thumb: "128x0"})} />
                             </div>
-                            <div class="flex flex-col gap-2">
+                            <div class="flex flex-col gap-2 description">
                                 <h3 class="text-2xl">
                                     {sk.name} • <span class="text-xl">{getSkillTypeString(sk.type)}</span>
                                     {#if sk.status != "OK"}
