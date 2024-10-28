@@ -18,7 +18,7 @@
     let filters: string[]
     $: filters = <string[]>[]
     let filteredData: Character[]
-    $: filteredData = data.entries.filter(x=>filters.length <= 0 || filters.includes(x.element) || filters.includes(x.weapon))
+    $: filteredData = data.entries.filter(x=>filters.length <= 0 || filters.includes(x.element) || filters.includes(x.weapon) || filters.includes(x.rarity.toString()))
     
     let selectedCharId: string = ""
     let selectedChar: Character | undefined = undefined
@@ -88,12 +88,25 @@
             </button>
         </div>
         <div class="join join-horizontal">
-            <div class="btn join-item">
-                Original
-                <input type="checkbox" class="toggle toggle-accent" bind:checked={showModifiedDescription}/>
-                Modified
-            </div>
+            <button class="btn join-item gap-1" class:btn-primary={filters.includes("4")} on:click={onFilterClick("4")}>
+                <span class="text-lg">4</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+                    <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+                </svg>
+                  
+            </button>
+            <button class="btn join-item gap-1" class:btn-primary={filters.includes("5")} on:click={onFilterClick("5")}>
+                <span class="text-lg">5</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+                    <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+                </svg>
+            </button>
         </div>
+        <button class="btn join-item">
+            Original
+            <input type="checkbox" class="toggle toggle-accent" bind:checked={showModifiedDescription}/>
+            Modified
+        </button>
     </div>
 
     <div class="flex flex-row gap-12">
@@ -101,7 +114,7 @@
             {#each filteredData as d (d.id)}
                 <button 
                     type="button"
-                    class={`${selectedCharId === d.id ? "bg-primary text-primary-content" : "bg-base-200"} card card-side shadow-xl p-4`} 
+                    class={`${selectedCharId === d.id ? "bg-primary text-primary-content sticky top-4 bottom-4 z-10" : "bg-base-200"} card card-side shadow-xl p-4`} 
                     data-charid={d.id} 
                     out:fly={{x: 100}}
                     in:fly={{delay: 200, x: -100}}
@@ -138,11 +151,30 @@
         </div>
         {#if selectedChar}
             <div class="flex-1 flex flex-col gap-4 basis-1/4">
+                <h3 class="text-3xl my-4 mx-2"><a href={`/characters/${selectedCharId}`} class="link link-hover">{selectedChar.name}</a></h3>
                 {#if selectedChar.expand && selectedChar.expand.skills}
-                    <h3 class="text-3xl my-4 mx-2">{selectedChar.name}</h3>
+                    {#if selectedChar.expand.skills.findIndex(x=>!x.status || x.status == "TODO" || x.status == "DRAFT") != -1}
+                        <div role="alert" class="alert alert-warning">
+                            <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-6 w-6 shrink-0 stroke-current"
+                            fill="none"
+                            viewBox="0 0 24 24">
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div>
+                                <h3 class="font-bold text-xl">Description Incomplete</h3>
+                                <div class="text-base">Some of the descriptions below might be incomplete and thus inaccurate.</div>
+                            </div>
+                        </div>
+                    {/if}
                     <div class="flex m-4 items-center">
                         <div class="flex-none basis-24">Level {level}</div>
-                        <input type="range" min="1" max="2" bind:value={level} class="range range-secondary range-sm" />
+                        <input type="range" min="1" max="10" bind:value={level} class="range range-secondary range-sm" />
                     </div>
                     {#each selectedChar.expand.skills as sk, idx (sk.id)}
                         <div class="flex flex-row gap-6">
@@ -161,9 +193,9 @@
                                 </h3>
                                 
                                 {#if showModifiedDescription}
-                                    {@html Handlebars.compile(processDescription(sk.description))({...sk.values, level})}
+                                    {@html Handlebars.compile(processDescription(sk.description))({...sk.values, level: level-1})}
                                 {:else}
-                                    {@html Handlebars.compile(processDescription(sk.original_description))({...sk.values, level})}
+                                    {@html Handlebars.compile(processDescription(sk.original_description))({...sk.values, level: level-1})}
                                 {/if}
                             </div>
                         </div>

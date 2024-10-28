@@ -43,7 +43,7 @@
 	{#if $page.data.char.expand && $page.data.char.expand.skills}
 		<div class="flex mb-4 mx-8 items-center">
 				<div class="flex-none basis-24">Level {level}</div>
-				<input type="range" min="1" max="2" bind:value={level} class="range range-secondary range-sm" />
+				<input type="range" min="1" max="10" bind:value={level} class="range range-secondary range-sm" />
 		</div>
 		{#each $page.data.char.expand.skills as sk, idx (sk.id)}
 				<div class="flex flex-row gap-6">
