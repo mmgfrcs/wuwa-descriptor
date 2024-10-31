@@ -2,7 +2,7 @@
 	import Handlebars from 'handlebars'
 	import { page } from "$app/stores";
 	import { getSkillTypeString, processDescription } from "$lib";
-	import pb from "$lib/pocketbase";
+	import lightMode from '$lib/stores/lightmode';
 
 	$: showModifiedDescription = true
 	$: level = 1
@@ -13,9 +13,20 @@
 </svelte:head>
 
 <div class="relative">
-	<img alt="Banner" class="h-[100vh] w-full object-cover img-mask" src={pb.files.getUrl($page.data.char, $page.data.char.bg)} />
+	<picture>
+		<source srcset={`/api/characters/${$page.data.char.id}/bg.webp`} type="image/webp" />
+		<source srcset={`/api/characters/${$page.data.char.id}/bg.avif`} type="image/avif" />
+		<source srcset={`/api/characters/${$page.data.char.id}/bg.png`} type="image/png" />
+		<img alt="Banner" class="h-[100vh] w-full object-cover img-mask" src={`/api/characters/${$page.data.char.id}/bg.webp`} />
+	</picture>
+	
 	<div class="ml-6 flex flex-col items-start gap-4 absolute bottom-8">
-		<img alt="Icon" class="flex-initial" src={pb.files.getUrl($page.data.char, $page.data.char.icon, {thumb: "192x0"})} />
+		<picture>
+			<source srcset={`/api/characters/${$page.data.char.id}/icon.webp`} type="image/webp" />
+			<source srcset={`/api/characters/${$page.data.char.id}/icon.avif`} type="image/avif" />
+			<source srcset={`/api/characters/${$page.data.char.id}/icon.png`} type="image/png" />
+			<img loading="lazy" class="flex-initial w-[192px]" alt="Icon" src={`/api/characters/${$page.data.char.id}/icon.png`} />
+		</picture>
 		<div class="flex flex-row items-center gap-2">
 			<h1 class="text-5xl">{$page.data.char.name}</h1>
 			<span class="text-5xl">•</span>
@@ -48,7 +59,9 @@
 		{#each $page.data.char.expand.skills as sk, idx (sk.id)}
 				<div class="flex flex-row gap-6">
 						<div class="basis-24 flex-none rounded-xl">
-							<img loading="lazy" alt="Icon" src={pb.files.getUrl(sk, sk.icons[0], {thumb: "128x0"})} />
+							{#each sk.icons as skIcon}
+								<img loading="lazy" alt="Icon" class:invert={$lightMode} src={`/api/skills/${sk.id}/icons/${skIcon}`} />
+							{/each}
 						</div>
 						<div class="flex flex-1 flex-col gap-2 description">
 							<h3 class="text-2xl">{sk.name} • <span class="text-xl">{getSkillTypeString(sk.type)}</span></h3>

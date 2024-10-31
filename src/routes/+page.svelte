@@ -1,7 +1,6 @@
 <script lang="ts">
     import Handlebars from 'handlebars'
 	import { getSkillTypeString, processDescription } from '$lib';
-    import pb from "$lib/pocketbase"
 	import type { ChangeEventHandler, MouseEventHandler } from 'svelte/elements';
 	import type { Character } from '$lib/models/character';
     import type {PageData} from "./$types"
@@ -121,7 +120,12 @@
                     animate:flip={{duration: 400}}
                     on:click={onCheckClick}>
                         <figure>
-                            <img loading="lazy" class="inline w-12 mr-4" alt="Icon" src={pb.files.getUrl(d, d.icon, {thumb: "128x0"})} />
+                            <picture>
+                                <source srcset={`/api/characters/${d.id}/icon.webp`} type="image/webp" />
+                                <source srcset={`/api/characters/${d.id}/icon.avif`} type="image/avif" />
+                                <source srcset={`/api/characters/${d.id}/icon.png`} type="image/png" />
+                                <img loading="lazy" class="inline w-12 mr-4" alt="Icon" src={`/api/characters/${d.id}/icon.png`} />
+                            </picture>
                         </figure>
                         <div class="card-body p-0 self-center">
                             <h2 class="card-title text-2xl overflow-x-hidden">
@@ -179,7 +183,9 @@
                     {#each selectedChar.expand.skills as sk, idx (sk.id)}
                         <div class="flex flex-row gap-6">
                             <div class="basis-24 flex-none rounded-xl">
-                                <img loading="lazy" alt="Icon" class:invert={$lightMode} src={pb.files.getUrl(sk, sk.icons[0], {thumb: "128x0"})} />
+                                {#each sk.icons as skIcon}
+                                    <img loading="lazy" alt="Icon" class:invert={$lightMode} src={`/api/skills/${sk.id}/icons/${skIcon}`} />
+                                {/each}
                             </div>
                             <div class="flex flex-col gap-2 description">
                                 <h3 class="text-2xl">

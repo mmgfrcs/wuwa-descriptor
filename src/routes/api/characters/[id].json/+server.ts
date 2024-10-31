@@ -16,5 +16,5 @@ export const entries: EntryGenerator = async () => {
 export const GET: RequestHandler = async (req) => {
     return json(await pb
         .collection('characters')
-        .getOne<Character>(req.params.id, {expand: "skills,chains", fetch: fetch, cache: "force-cache"}))
+        .getOne<Character>(req.params.id, {expand: "skills,chains", fetch, cache: "force-cache"}))
 };
