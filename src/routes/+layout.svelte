@@ -56,7 +56,7 @@
     <a href="/" class="btn btn-ghost text-xl">Wuthering Waves Descriptor <div class="badge badge-outline">1.3</div></a>
   </h1>
   <div class="flex-none">
-    <label class="swap swap-rotate">
+    <label class="swap swap-rotate btn btn-square btn-ghost">
       <!-- this hidden checkbox controls the state -->
       <input type="checkbox" value="winter" class="theme-controller" bind:checked={$lightMode} />
       <!-- moon icon --> 
