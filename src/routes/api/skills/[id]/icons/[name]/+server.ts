@@ -16,9 +16,9 @@ export const entries: EntryGenerator = async () => {
 };
 
 export const GET: RequestHandler = async (req) => {
-    let sk = await pb.autoCancellation(false)
+    let sk = await pb
         .collection('skills')
-        .getOne<Skill>(req.params.id, {fetch})
+        .getOne<Skill>(req.params.id, {fetch, requestKey: null})
 
     if(!sk.icons || sk.icons.length == 0 || sk.icons.find(x=>x === req.params.name) === undefined) 
         return error(404, "Icon not found")

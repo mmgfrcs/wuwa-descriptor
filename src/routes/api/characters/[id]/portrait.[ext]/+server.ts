@@ -19,7 +19,7 @@ export const entries: EntryGenerator = async () => {
 export const GET: RequestHandler = async (req) => {
     let char = await pb
         .collection('characters')
-        .getOne<Character>(req.params.id, {fetch})
+        .getOne<Character>(req.params.id, {fetch, requestKey: null})
 
     if(!char.portrait || char.portrait === "") return error(404, "Portrait not found")
     
