@@ -11,7 +11,7 @@ export const entries: EntryGenerator = async () => {
         .collection('characters')
         .getFullList<Character>({sort: "+name"})
     
-    return chars.filter(x=>x.icon && x.icon != "").flatMap((x)=>{
+    return chars.filter(x=>x.portrait && x.portrait != "").flatMap((x)=>{
         return [{id: x.id, ext: "png"}, {id: x.id, ext: "webp"}, {id: x.id, ext: "avif"}]
     })
 };
