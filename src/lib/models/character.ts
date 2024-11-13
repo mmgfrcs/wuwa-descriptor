@@ -7,10 +7,12 @@ export type Character = RecordModel & {
   weapon: string,
   rarity: number,
   standard: boolean,
+  unreleased: boolean,
   bg: string,
   portrait: string,
   expand: {
-    skills: Skill[]
+    skills: Skill[],
+    chains: Chains[]
   }
 }
 
@@ -23,6 +25,18 @@ export type Skill = RecordModel & {
   description: string,
   original_description: string,
   values: object,
+  gameplay_notes: string,
+  description_notes: string
+}
+
+export type Chains = RecordModel & {
+  name: string,
+  character: string,
+  status: string,
+  level: number,
+  icon: string,
+  description: string,
+  original_description: string,
   gameplay_notes: string,
   description_notes: string
 }

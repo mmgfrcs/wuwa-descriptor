@@ -107,7 +107,7 @@
             Modified
         </button>
     </div>
-
+    
     <div class="flex flex-row gap-12">
         <div class="flex flex-col gap-4" class:flex-1={selectedCharId == ""} class:flex-none={selectedCharId != ""}>
             {#each filteredData as d (d.id)}
@@ -139,7 +139,9 @@
                                 {#await import(`$lib/assets/weapons/${d.weapon.toLowerCase()}.png?enhanced`) then { default: src }}
                                     <enhanced:img loading="lazy" class="inline w-10 min-w-10 rounded-full" class:invert={$lightMode && selectedCharId !== d.id} alt="Icon" src={src} />
                                 {/await}
-                                {#if !d.expand || !d.expand.skills || d.expand.skills.length == 0}
+                                {#if d.unreleased}
+                                    <div class="badge badge-info">Unreleased</div>
+                                {:else if !d.expand || !d.expand.skills || d.expand.skills.length == 0}
                                     <div class="badge badge-error">Empty</div>
                                     <div class="badge badge-error">TODO</div>
                                 {:else if d.expand.skills.findIndex(x=>!x.status || x.status == "TODO") != -1}
@@ -156,19 +158,38 @@
         {#if selectedChar}
             <div class="flex-1 flex flex-col gap-4 basis-1/4">
                 <h3 class="text-3xl my-4 mx-2"><a href={`/characters/${selectedCharId}`} class="link link-hover">{selectedChar.name}</a></h3>
+                {#if selectedChar.unreleased}
+                    <div role="alert" class="alert alert-info">
+                        <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6 shrink-0 stroke-current"
+                        fill="none"
+                        viewBox="0 0 24 24">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <div>
+                            <h3 class="font-bold text-xl">Unreleased Character</h3>
+                            <div class="text-base">This is an unreleased character. Character data might be inaccurate.</div>
+                        </div>
+                    </div>
+                {/if}
                 {#if selectedChar.expand && selectedChar.expand.skills}
                     {#if selectedChar.expand.skills.findIndex(x=>!x.status || x.status == "TODO" || x.status == "DRAFT") != -1}
                         <div role="alert" class="alert alert-warning">
                             <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-6 w-6 shrink-0 stroke-current"
-                            fill="none"
-                            viewBox="0 0 24 24">
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-6 w-6 shrink-0 stroke-current"
+                                fill="none"
+                                viewBox="0 0 24 24">
+                                <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <div>
                                 <h3 class="font-bold text-xl">Description Incomplete</h3>
