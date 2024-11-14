@@ -20,17 +20,12 @@
             return
 
           const resp = await fetch(url, {
-            cache: 'no-cache',
-            headers: {
-              'cache': 'no-cache',
-              'cache-control': 'no-cache',
-            },
+            cache: 'no-cache'
           })
-          if (resp?.status === 200) {
+          if (resp?.status === 200)
             await r.update()
-            console.log(`Service worker update complete`)
-          } else console.error(`Service worker update error`, resp?.status)
 
+            console.log(`Service worker update complete`)
         }, 30000)
         console.log(`Registered service worker ${url}`)
       }
