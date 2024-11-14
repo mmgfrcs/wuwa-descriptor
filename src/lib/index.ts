@@ -32,3 +32,7 @@ export function getSkillTypeString(str: string) {
       return ""
   }
 }
+
+export function getImagekitUrl(pbUrl: string) {
+  return pbUrl.replace("https://wuwadesc.pockethost.io/api/files", "https://ik.imagekit.io/wzvqps79m/wuwadesc-files")
+}

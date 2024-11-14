@@ -6,6 +6,7 @@
 	import { onMount } from "svelte";
   import lightMode from '$lib/stores/lightmode'
   import { page } from '$app/stores'
+  import { onNavigate } from '$app/navigation';
 
   onMount(() => {
     useRegisterSW({
@@ -33,6 +34,18 @@
   })
 
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : '' 
+
+  //View Transition
+  onNavigate((navigation) => {
+    if (!document.startViewTransition) return;
+
+    return new Promise((resolve) => {
+      document.startViewTransition(async () => {
+        resolve();
+        await navigation.complete;
+      });
+    });
+  });
   
 </script>
 
@@ -47,7 +60,7 @@
   <meta name="description" content="Describe Wuthering Waves Character Skills better." />
 </svelte:head>
 
-<nav class={`navbar bg-base-100 py-4 bg-transparent ${$page.url.pathname.includes("characters") ? "absolute z-10 mix-blend-plus-lighter" : ""}`}>
+<nav class={`navbar bg-base-100 py-4 bg-transparent md:flex-row flex-col ${$page.url.pathname.includes("characters") ? "absolute z-10 mix-blend-difference backdrop-blur-sm" : ""}`}>
   <h1 class="flex-1">
     <a href="/" class="btn btn-ghost text-xl">Wuthering Waves Descriptor <div class="badge badge-outline">1.3</div></a>
   </h1>

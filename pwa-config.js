@@ -17,52 +17,33 @@ let pwaConfig = {
         display: "standalone",
         orientation: "landscape",
         scope: "/",
-        start_url: "/"
+        start_url: "/",
+        screenshots: [
+            {
+                src: "screenshot-wide.png",
+                form_factor: "wide",
+                sizes: "2880x2366"
+            }, 
+            {
+                src: "screenshot-mobile.png",
+                form_factor: "narrow",
+                sizes: "850x2366"
+            }, 
+        ]
     },
     pwaAssets: {
         preset: "minimal-2023",
         image: "static/favicon.png",
         injectThemeColor: true,
-        overrideManifestIcons: true
+        overrideManifestIcons: true,
     },
     workbox: {
         cleanupOutdatedCaches: true,
-        dontCacheBustURLsMatching: /-[a-f0-9]{8}\./,
+        // dontCacheBustURLsMatching: /-[a-f0-9]{8}\./,
         // globDirectory: './.vercel/output/static',
         // globPatterns: ['robots.txt', '**/*.{js,css,html,ico,png,svg,webp,avif,webmanifest}'],
         // globIgnores: ['**/sw*', '**/workbox-*'],
         globPatterns: ['client/**/*.{js,css,ico,png,svg,webp,webmanifest,avif}', 'prerendered/**/*.html'],
-        runtimeCaching: [
-            {
-                urlPattern: /api\/.*/i,
-                handler: 'StaleWhileRevalidate',
-                options: {
-                    cacheName: 'cms-cache',
-                    
-                    backgroundSync: {
-                        name: 'cms-sync',
-                        options: {
-                            maxRetentionTime: 24*60
-                        }
-                    },
-                    cacheableResponse: {
-                        statuses: [0, 200]
-                    }
-                }
-            },
-            {
-                urlPattern: /\.*/,
-                handler: 'NetworkFirst',
-                options: {
-                    cacheName: 'site-cache',
-                    cacheableResponse: {
-                        statuses: [0, 200]
-                    }
-                }
-            },
-        ],
-        navigationPreload: true,
-        navigateFallback: null,
     },
 }
 
