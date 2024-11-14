@@ -20,11 +20,7 @@
             return
 
           const resp = await fetch(url, {
-            cache: 'no-store',
-            headers: {
-              'cache': 'no-store',
-              'cache-control': 'no-cache',
-            },
+            cache: 'no-cache'
           })
           if (resp?.status === 200)
             await r.update()
