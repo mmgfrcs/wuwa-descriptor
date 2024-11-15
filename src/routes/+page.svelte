@@ -173,7 +173,7 @@
                                     {#await import(`$lib/assets/weapons/${d.weapon.toLowerCase()}.png?enhanced`) then { default: src }}
                                         <enhanced:img loading="lazy" class="inline w-10 min-w-10 rounded-full" class:invert={$lightMode && selectedCharId !== d.id} alt="Icon" src={src} />
                                     {/await}
-                                    {#if d.unreleased}
+                                    {#if new Date(d.expand.version.release_date).getTime() > Date.now()}
                                         <div class="badge badge-info md:inline hidden">Unreleased</div>
                                     {:else if !d.expand || !d.expand.skills || d.expand.skills.length == 0}
                                         <div class="badge badge-error md:inline hidden">Empty</div>
@@ -183,7 +183,7 @@
                                     {:else if d.expand.skills.findIndex(x=>x.status == "DRAFT") != -1}
                                         <div class="badge badge-warning md:inline hidden">Draft</div>
                                     {/if}
-                                    
+                                    <div class="badge badge-outline md:inline hidden">{d.expand.version.version}</div>
                                 </h2>
                             </div>
                     </button>
@@ -192,7 +192,7 @@
             {#if selectedChar}
                 <div class="flex-1 flex flex-col gap-4 basis-1/4">
                     <h3 class="text-3xl my-4 mx-2"><a href={`/characters/${selectedCharId}`} class="link link-hover">{selectedChar.name}</a></h3>
-                    {#if selectedChar.unreleased}
+                    {#if new Date(selectedChar.expand.version.release_date).getTime() > Date.now()}
                         <AlertBanner 
                             type="info" 
                             title="Unreleased Character" 

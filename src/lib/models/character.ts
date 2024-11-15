@@ -1,4 +1,5 @@
 import type { RecordModel } from "pocketbase"
+import type { GameVersion } from "./version"
 
 export type Character = RecordModel & {
   name: string
@@ -12,7 +13,8 @@ export type Character = RecordModel & {
   portrait: string,
   expand: {
     skills: Skill[],
-    chains: Chains[]
+    chains: Chains[],
+    version: GameVersion
   }
 }
 

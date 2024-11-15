@@ -5,6 +5,6 @@ export async function load(par) {
     return {
         entries: pb
             .collection('characters')
-            .getFullList<Character>({sort: "+name", expand: "skills,chains", fetch: par.fetch, cache: "force-cache"})
+            .getFullList<Character>({sort: "+name", expand: "skills,chains,version", fetch: par.fetch, cache: "force-cache"})
     }
 }
