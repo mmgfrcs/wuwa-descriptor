@@ -136,14 +136,18 @@
         </div>
         <button class="btn join-item">
             Original
-            <input type="checkbox" class="toggle toggle-accent" bind:checked={showModifiedDescription}/>
+            <input type="checkbox" class="toggle toggle-accent" bind:checked={showModifiedDescription} aria-label="Switch Description"/>
             Modified
         </button>
     </div>
     {#await data.entries}
-        <h3 class="text-xl items-center">
-            <span class="loading loading-spinner"></span> Loading... 
-        </h3>
+        <div class="flex flex-col gap-4">
+            {#each Array(12) as _}
+                <div 
+                    class="skeleton shadow-xl p-4 h-20">
+                </div>
+            {/each}
+        </div>
     {:then ch} 
         {onData(ch) ?? ""}
         <div class="flex lg:flex-row flex-col-reverse gap-12">

@@ -79,6 +79,7 @@
   </h1>
   <div class="flex-none">
     <label class="swap swap-rotate btn btn-square btn-ghost">
+      <span class="sr-only">Switch mode</span>
       <!-- this hidden checkbox controls the state -->
       <input type="checkbox" value="winter" class="theme-controller" bind:checked={$lightMode} />
       <!-- moon icon --> 
