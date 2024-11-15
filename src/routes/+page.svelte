@@ -9,6 +9,8 @@
 	import { goto } from '$app/navigation';
 	import { flip } from 'svelte/animate';
 	import pb from '$lib/pocketbase';
+	import AlertBanner from '$lib/components/AlertBanner.svelte';
+	import { page } from '$app/stores';
 
     $: showModifiedDescription = true
     $: level = 1
@@ -47,11 +49,15 @@
 
 <svelte:head>
     <title>Wuthering Waves Descriptor</title>
+    <meta property="og:url" content={$page.url.toString()} />
+	<meta property="og:site_name" content="Wuthering Waves Descriptor" />
+	<meta property="og:type" content="website" />
+	<meta property="og:title" content="Wuthering Waves Descriptor - Character List" />
+	<meta property="og:image" content="https://ik.imagekit.io/wzvqps79m/T_Bg1_UI_wK69jXXIc.png?updatedAt=1731674557301" />
+	<meta property="twitter:card" content="summary">
 </svelte:head>
 
-<main class="container mx-auto pb-6 px-4">
-    <!-- svelte-ignore missing-declaration -->
-    <h2 class="mb-4 ml-2">Last Updated at {new Date(BUILD_DATE).toLocaleString("en-UK")}</h2>
+<main class="container mx-auto pb-6 px-4 flex-1">
     <div class="flex gap-4 mb-4 xl:flex-row xl:items-left flex-col">
         
         <div class="join join-horizontal max-md:hidden">
@@ -187,43 +193,17 @@
                 <div class="flex-1 flex flex-col gap-4 basis-1/4">
                     <h3 class="text-3xl my-4 mx-2"><a href={`/characters/${selectedCharId}`} class="link link-hover">{selectedChar.name}</a></h3>
                     {#if selectedChar.unreleased}
-                        <div role="alert" class="alert alert-info">
-                            <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-6 w-6 shrink-0 stroke-current"
-                            fill="none"
-                            viewBox="0 0 24 24">
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <div>
-                                <h3 class="font-bold text-xl">Unreleased Character</h3>
-                                <div class="text-base">This is an unreleased character. Character data might be inaccurate.</div>
-                            </div>
-                        </div>
+                        <AlertBanner 
+                            type="info" 
+                            title="Unreleased Character" 
+                            content="This is an unreleased character. Character data might be inaccurate." />
                     {/if}
                     {#if selectedChar.expand && selectedChar.expand.skills}
                         {#if selectedChar.expand.skills.findIndex(x=>!x.status || x.status == "TODO" || x.status == "DRAFT") != -1}
-                            <div role="alert" class="alert alert-warning">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-6 w-6 shrink-0 stroke-current"
-                                    fill="none"
-                                    viewBox="0 0 24 24">
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                <div>
-                                    <h3 class="font-bold text-xl">Description Incomplete</h3>
-                                    <div class="text-base">Some of the descriptions below might be incomplete and thus inaccurate.</div>
-                                </div>
-                            </div>
+                            <AlertBanner 
+                                type="warning" 
+                                title="Description Incomplete" 
+                                content="Some of the descriptions below might be incomplete and thus inaccurate." />
                         {/if}
                         <div class="flex m-4 items-center">
                             <div class="flex-none basis-24">Level {level}</div>
@@ -259,27 +239,19 @@
                             {/if}
                         {/each}
                     {:else}
-                        <div role="alert" class="alert alert-warning">
-                            <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-6 w-6 shrink-0 stroke-current"
-                            fill="none"
-                            viewBox="0 0 24 24">
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <div>
-                                <h3 class="font-bold text-xl">Description Unavailable</h3>
-                                <div class="text-base">This is usually caused by the character being unreleased yet, but it could also be that the skills haven't been updated yet.</div>
-                            </div>
-                        </div>
+                    <AlertBanner 
+                        type="warning" 
+                        title="Description Unavailable" 
+                        content="This is usually caused by the character being unreleased yet, but it could also be that the skills haven't been updated yet." />
                     {/if}
                 </div>
             {/if}
         </div>
+    {:catch}
+        <AlertBanner 
+            type="error" 
+            title="Backend Unavailable" 
+            content="Backend is currently unresponsive. Please try again later." />
     {/await}
     
 </main>

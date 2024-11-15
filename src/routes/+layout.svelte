@@ -1,12 +1,23 @@
-<script>
+<script lang="ts">
   import "../app.css";
   import { pwaInfo } from 'virtual:pwa-info'; 
   import { useRegisterSW } from 'virtual:pwa-register/svelte';
   import { pwaAssetsHead } from 'virtual:pwa-assets/head';
 	import { onMount } from "svelte";
   import lightMode from '$lib/stores/lightmode'
-  import { page } from '$app/stores'
+  import { page, navigating } from '$app/stores'
   import { onNavigate } from '$app/navigation';
+	import type { GameVersion } from "$lib/models/version";
+
+  export let data
+
+  function getVersion(ver: GameVersion[]) {
+    for (let i = 0; i < ver.length; i++) {
+      const element = ver[i];
+      if(new Date(element.release_date).getTime() < new Date().getTime()) return element.version
+    }
+    return "Beta"
+  }
 
   onMount(() => {
     useRegisterSW({
@@ -27,7 +38,7 @@
             await r.update()
 
             console.log(`Service worker update complete`)
-        }, 30000)
+        }, 86400000)
         console.log(`Registered service worker ${url}`)
       }
     })
@@ -62,7 +73,9 @@
 
 <nav class={`navbar bg-base-100 py-4 bg-transparent md:flex-row flex-col ${$page.url.pathname.includes("characters") ? "absolute z-10 mix-blend-difference backdrop-blur-sm" : ""}`}>
   <h1 class="flex-1">
-    <a href="/" class="btn btn-ghost text-xl">Wuthering Waves Descriptor <div class="badge badge-outline">1.3</div></a>
+    <a href="/" class="btn btn-ghost text-xl">Wuthering Waves Descriptor {#await data.version then ver}
+      <div class="badge badge-outline">{getVersion(ver)}</div>
+    {/await}</a>
   </h1>
   <div class="flex-none">
     <label class="swap swap-rotate btn btn-square btn-ghost">
@@ -98,6 +111,10 @@
     </a>
   </div>
 </nav>
+{#if $navigating}
+  <progress class="progress w-full min-h-2 mb-4 sticky top-0 z-10"></progress>
+{/if}
+
 
 <slot />
 
