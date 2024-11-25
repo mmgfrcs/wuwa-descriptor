@@ -1,29 +1,62 @@
-<script>
+<script lang="ts">
   import "../app.css";
   import { pwaInfo } from 'virtual:pwa-info'; 
   import { useRegisterSW } from 'virtual:pwa-register/svelte';
   import { pwaAssetsHead } from 'virtual:pwa-assets/head';
 	import { onMount } from "svelte";
-  import { themeChange } from 'theme-change'
-  import { dev } from '$app/environment'
   import lightMode from '$lib/stores/lightmode'
+  import { page, navigating } from '$app/stores'
+  import { onNavigate } from '$app/navigation';
+	import type { GameVersion } from "$lib/models/version";
+
+  export let data
+
+  function getVersion(ver: GameVersion[]) {
+    for (let i = 0; i < ver.length; i++) {
+      const element = ver[i];
+      if(new Date(element.release_date).getTime() < new Date().getTime()) return element.version
+    }
+    return "Beta"
+  }
 
   onMount(() => {
     useRegisterSW({
       immediate: true,
-      onRegistered: (r) => {
-        r && setInterval(() => {
+      onRegisteredSW: (url, r) => {
+        r && setInterval(async () => {
           console.log(`Checking service worker update`)
-          r.update()
-        }, 30000)
-        console.log(`Registered service worker ${r}`)
+          if (r.installing || !navigator)
+            return
+
+          if (('connection' in navigator) && !navigator.onLine)
+            return
+
+          const resp = await fetch(url, {
+            cache: 'no-cache'
+          })
+          if (resp?.status === 200)
+            await r.update()
+
+            console.log(`Service worker update complete`)
+        }, 86400000)
+        console.log(`Registered service worker ${url}`)
       }
     })
-
-    themeChange(false)
   })
 
   $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : '' 
+
+  //View Transition
+  onNavigate((navigation) => {
+    if (!document.startViewTransition) return;
+
+    return new Promise((resolve) => {
+      document.startViewTransition(async () => {
+        resolve();
+        await navigation.complete;
+      });
+    });
+  });
   
 </script>
 
@@ -35,24 +68,21 @@
 	  <link {...link} />
 	{/each}
  	{@html webManifestLink} 
-  {#if !dev}
-    <script>
-      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-    </script>
-    <script src="/util/script1.js" />
-    <script src="/util/script2.js" />
-  {/if}
+  <meta name="description" content="Describe Wuthering Waves Character Skills better." />
 </svelte:head>
 
-<nav class="navbar bg-base-100 py-4">
-  <div class="flex-1">
-    <a href="/" class="btn btn-ghost text-xl">Wuthering Waves Descriptor</a>
-  </div>
+<nav class={`navbar bg-base-100 py-4 bg-transparent md:flex-row flex-col ${$page.url.pathname.includes("characters") ? "absolute z-10 mix-blend-difference backdrop-blur-sm" : ""}`}>
+  <h1 class="flex-1">
+    <a href="/" class="btn btn-ghost text-xl">Wuthering Waves Descriptor {#await data.version then ver}
+      <div class="badge badge-outline">{getVersion(ver)}</div>
+    {/await}</a>
+  </h1>
   <div class="flex-none">
-    <label class="swap swap-rotate">
+    <label class="swap swap-rotate btn btn-square btn-ghost">
+      <span class="sr-only">Switch mode</span>
       <!-- this hidden checkbox controls the state -->
       <input type="checkbox" value="winter" class="theme-controller" bind:checked={$lightMode} />
-      <!-- moon icon -->
+      <!-- moon icon --> 
       <svg
         class="swap-off h-10 w-10 fill-current"
         xmlns="http://www.w3.org/2000/svg"
@@ -82,10 +112,14 @@
     </a>
   </div>
 </nav>
+{#if $navigating}
+  <progress class="progress w-full min-h-2 mb-4 sticky top-0 z-10"></progress>
+{/if}
+
 
 <slot />
 
-<footer class="footer footer-center bg-base-300 text-base-content p-4">
+<footer class="footer footer-center bg-base-300 text-base-content p-4 mt-6">
   <aside>
     <p>Copyright © 2024 Wuthering Waves Descriptor</p>
   </aside>

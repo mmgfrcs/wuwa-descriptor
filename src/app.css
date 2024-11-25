@@ -5,3 +5,35 @@
 .img-mask {
   mask-image: linear-gradient(to bottom, white, transparent);
 }
+
+.description ul {
+  @apply list-disc pl-6
+}
+
+.description ul li {
+  @apply pb-2
+}
+
+.description ol {
+  @apply list-decimal pl-6
+}
+
+.description ol li {
+  @apply pb-2
+}
+
+.description li ol {
+  @apply pt-2
+}
+
+.description li ul {
+  @apply pt-2
+}
+
+.description ul li:has(ul, ol) {
+  @apply pb-0
+}
+
+.description ol li:has(ul, ol) {
+  @apply pb-0
+}

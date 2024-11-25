@@ -3,8 +3,8 @@ import pb from "$lib/pocketbase";
 
 export async function load(par) {
     return {
-        entries: await pb
+        entries: pb
             .collection('characters')
-            .getFullList<Character>({sort: "+name", expand: "skills,chains", fetch: par.fetch, cache: "default"})
+            .getFullList<Character>({sort: "+name", expand: "skills,chains,version", fetch: par.fetch, cache: "default"})
     }
 }
