@@ -13,6 +13,7 @@
 	import { page } from '$app/stores';
 
     $: showModifiedDescription = true
+    $: showUnreleased = false
     $: level = 1
     
     export let data: PageData
@@ -139,6 +140,10 @@
             <input type="checkbox" class="toggle toggle-accent" bind:checked={showModifiedDescription} aria-label="Switch Description"/>
             Modified
         </button>
+        <button class="btn join-item">
+            Unreleased
+            <input type="checkbox" class="toggle toggle-accent" bind:checked={showUnreleased} aria-label="Show/Hide Unreleased"/>
+        </button>
     </div>
     {#await data.entries}
         <div class="flex flex-col gap-4">
@@ -152,45 +157,46 @@
         {onData(ch) ?? ""}
         <div class="flex lg:flex-row flex-col-reverse gap-12">
             <div class="flex flex-col gap-4" class:flex-1={selectedCharId == ""} class:flex-none={selectedCharId != ""}>
-                {#each filteredChars as d (d.id)}
-                    <button 
-                        type="button"
-                        class={`${selectedCharId === d.id ? "bg-primary text-primary-content lg:sticky lg:top-4 lg:bottom-4 z-10" : "bg-base-200"} card card-side shadow-xl p-4 transition`} 
-                        data-charid={d.id}
-                        out:fly={{x: 100}}
-                        in:fly={{delay: 200, x: -100}}
-                        animate:flip={{duration: 400}}
-                        on:click={onCheckClick}>
-                            <figure>
-                                <img loading="lazy" class="inline w-12 mr-4" alt="Icon" src={getImagekitUrl(pb.files.getUrl(d, d.icon))+"?tr=w-48"} />
-                            </figure>
-                            <div class="card-body p-0 self-center">
-                                <h2 class="card-title text-2xl overflow-x-hidden">
-                                    <!-- A workaround to get the link to register clicks before the button -->
-                                    <a href={`/characters/${d.id}`} on:click|stopPropagation|preventDefault={x=> goto(`/characters/${d.id}`)} class="link link-hover text-left overflow-hidden">
-                                        <span>{d.name}</span>
-                                    </a>
-                                    •
-                                    {#await import(`$lib/assets/elements/${d.element.toLowerCase()}.png?enhanced`) then { default: src }}
-                                        <enhanced:img loading="lazy" class="inline w-10 min-w-10 rounded-full" alt="Icon" src={src} />
-                                    {/await}
-                                    {#await import(`$lib/assets/weapons/${d.weapon.toLowerCase()}.png?enhanced`) then { default: src }}
-                                        <enhanced:img loading="lazy" class="inline w-10 min-w-10 rounded-full" class:invert={$lightMode && selectedCharId !== d.id} alt="Icon" src={src} />
-                                    {/await}
-                                    {#if new Date(d.expand.version.release_date).getTime() > Date.now()}
-                                        <div class="badge badge-info md:inline hidden">Unreleased</div>
-                                    {:else if !d.expand || !d.expand.skills || d.expand.skills.length == 0}
-                                        <div class="badge badge-error md:inline hidden">Empty</div>
-                                        <div class="badge badge-error md:inline hidden">TODO</div>
-                                    {:else if d.expand.skills.findIndex(x=>!x.status || x.status == "TODO") != -1}
-                                        <div class="badge badge-error md:inline hidden">TODO</div>
-                                    {:else if d.expand.skills.findIndex(x=>x.status == "DRAFT") != -1}
-                                        <div class="badge badge-warning md:inline hidden">Draft</div>
-                                    {/if}
-                                    <div class="badge badge-outline md:inline hidden">{d.expand.version.version}</div>
-                                </h2>
-                            </div>
-                    </button>
+                {#each filteredChars.filter(c => {
+                    return showUnreleased || new Date(c.expand.version.release_date).getTime() <= Date.now()
+                }) as d (d.id)}
+                       <button 
+                            type="button"
+                            class={`${selectedCharId === d.id ? "bg-primary text-primary-content lg:sticky lg:top-4 lg:bottom-4 z-10" : "bg-base-200"} card card-side shadow-xl p-4 transition`} 
+                            data-charid={d.id}
+                            transition:fly={{x: 100}}
+                            animate:flip={{duration: 400}}
+                            on:click={onCheckClick}>
+                                <figure>
+                                    <img loading="lazy" class="inline w-12 mr-4" alt="Icon" src={getImagekitUrl(pb.files.getUrl(d, d.icon))+"?tr=w-48"} />
+                                </figure>
+                                <div class="card-body p-0 self-center">
+                                    <h2 class="card-title text-2xl overflow-x-hidden">
+                                        <!-- A workaround to get the link to register clicks before the button -->
+                                        <a href={`/characters/${d.id}`} on:click|stopPropagation|preventDefault={x=> goto(`/characters/${d.id}`)} class="link link-hover text-left overflow-hidden">
+                                            <span>{d.name}</span>
+                                        </a>
+                                        •
+                                        {#await import(`$lib/assets/elements/${d.element.toLowerCase()}.png?enhanced`) then { default: src }}
+                                            <enhanced:img loading="lazy" class="inline w-10 min-w-10 rounded-full" alt="Icon" src={src} />
+                                        {/await}
+                                        {#await import(`$lib/assets/weapons/${d.weapon.toLowerCase()}.png?enhanced`) then { default: src }}
+                                            <enhanced:img loading="lazy" class="inline w-10 min-w-10 rounded-full" class:invert={$lightMode && selectedCharId !== d.id} alt="Icon" src={src} />
+                                        {/await}
+                                        {#if new Date(d.expand.version.release_date).getTime() > Date.now()}
+                                            <div class="badge badge-info md:inline hidden">Unreleased</div>
+                                        {:else if !d.expand || !d.expand.skills || d.expand.skills.length == 0}
+                                            <div class="badge badge-error md:inline hidden">Empty</div>
+                                            <div class="badge badge-error md:inline hidden">TODO</div>
+                                        {:else if d.expand.skills.findIndex(x=>!x.status || x.status == "TODO") != -1}
+                                            <div class="badge badge-error md:inline hidden">TODO</div>
+                                        {:else if d.expand.skills.findIndex(x=>x.status == "DRAFT") != -1}
+                                            <div class="badge badge-warning md:inline hidden">Draft</div>
+                                        {/if}
+                                        <div class="badge badge-outline md:inline hidden">{d.expand.version.version}</div>
+                                    </h2>
+                                </div>
+                        </button>
                 {/each}
             </div>
             {#if selectedChar}

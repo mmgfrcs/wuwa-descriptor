@@ -11,6 +11,6 @@ export async function load(par) {
     return {
         version: pb
           .collection('versions')
-          .getFullList<GameVersion>({sort: "-release_date", fetch: par.fetch, cache: "force-cache"})
+          .getFullList<GameVersion>({sort: "-release_date", fetch: par.fetch, cache: "default"})
     }
 }
