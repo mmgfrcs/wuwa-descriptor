@@ -209,10 +209,11 @@
                             content="This is an unreleased character. Character data might be inaccurate." />
                     {/if}
                     {#if selectedChar.expand && selectedChar.expand.skills}
-                        {#if selectedChar.expand.skills.findIndex(x=>!x.status || x.status == "TODO" || x.status == "DRAFT") != -1}
+                        {#if selectedChar.expand.skills.findIndex(x=>!x.status || x.status == "TODO" || x.status == "DRAFT") != -1 || 
+                            selectedChar.expand.chains.findIndex(x=>!x.status || x.status == "TODO" || x.status == "DRAFT") != -1}
                             <AlertBanner 
                                 type="warning" 
-                                title="Description Incomplete" 
+                                title="Descriptions Incomplete" 
                                 content="Some of the descriptions below might be incomplete and thus inaccurate." />
                         {/if}
                         <div class="flex m-4 items-center">
@@ -251,7 +252,46 @@
                     {:else}
                     <AlertBanner 
                         type="warning" 
-                        title="Description Unavailable" 
+                        title="Skill Descriptions Unavailable" 
+                        content="This is usually caused by the character being unreleased yet, but it could also be that the skills haven't been updated yet." />
+                    {/if}
+                    {#if selectedChar.expand && selectedChar.expand.chains}
+                        {#if selectedChar.expand.skills && selectedChar.expand.skills.length > 0}
+                            <div class="divider"></div>
+                        {/if}
+                        {#each selectedChar.expand.chains as chns, idx (chns.id)}
+                            <div class="flex lg:flex-row flex-col gap-6">
+                                <div class="basis-24 flex-none rounded-xl">
+                                    {#if chns.icon}
+                                        <img loading="lazy" alt="Icon" class="max-w-[96px]" class:invert={$lightMode} src={getImagekitUrl(pb.files.getUrl(chns, chns.icon))} />
+                                    {/if}
+                                </div>
+                                <div class="flex flex-col gap-2 description">
+                                    <h3 class="text-2xl">
+                                        {chns.name} • <span class="text-xl">Sequence {chns.level}</span>
+                                        {#if chns.status != "OK"}
+                                            <div 
+                                                class="badge" 
+                                                class:badge-error={!chns.status || chns.status == "TODO"}
+                                                class:badge-warning={chns.status == "DRAFT"}>{chns.status || "TODO"}</div>
+                                        {/if}
+                                    </h3>
+                                    
+                                    {#if showModifiedDescription}
+                                        {@html Handlebars.compile(processDescription(chns.description))({...chns.values, level: level-1})}
+                                    {:else}
+                                        {@html Handlebars.compile(processDescription(chns.original_description))({...chns.values, level: level-1})}
+                                    {/if}
+                                </div>
+                            </div>
+                            {#if idx < selectedChar.expand.chains.length-1}
+                                <div class="divider"></div>
+                            {/if}
+                        {/each}
+                    {:else}
+                    <AlertBanner 
+                        type="warning" 
+                        title="Chain Descriptions Unavailable" 
                         content="This is usually caused by the character being unreleased yet, but it could also be that the skills haven't been updated yet." />
                     {/if}
                 </div>
