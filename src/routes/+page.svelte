@@ -156,7 +156,7 @@
     {:then ch} 
         {onData(ch) ?? ""}
         <div class="flex lg:flex-row flex-col-reverse gap-12">
-            <div class="flex flex-col gap-4" class:flex-1={selectedCharId == ""} class:flex-none={selectedCharId != ""}>
+            <div class="flex flex-1 flex-col gap-4">
                 {#each filteredChars.filter(c => {
                     return showUnreleased || new Date(c.expand.version.release_date).getTime() <= Date.now()
                 }) as d (d.id)}
@@ -201,7 +201,7 @@
             </div>
             {#if selectedChar}
                 <div class="flex-1 flex flex-col gap-4 basis-1/4">
-                    <h3 class="text-3xl my-4 mx-2"><a href={`/characters/${selectedCharId}`} class="link link-hover">{selectedChar.name}</a></h3>
+                    <h2 class="text-3xl my-4 mx-2"><a href={`/characters/${selectedCharId}`} class="link link-hover">{selectedChar.name}</a></h2>
                     {#if new Date(selectedChar.expand.version.release_date).getTime() > Date.now()}
                         <AlertBanner 
                             type="info" 
@@ -209,10 +209,11 @@
                             content="This is an unreleased character. Character data might be inaccurate." />
                     {/if}
                     {#if selectedChar.expand && selectedChar.expand.skills}
-                        {#if selectedChar.expand.skills.findIndex(x=>!x.status || x.status == "TODO" || x.status == "DRAFT") != -1}
+                        {#if selectedChar.expand.skills.findIndex(x=>!x.status || x.status == "TODO" || x.status == "DRAFT") != -1 || 
+                            selectedChar.expand.chains.findIndex(x=>!x.status || x.status == "TODO" || x.status == "DRAFT") != -1}
                             <AlertBanner 
                                 type="warning" 
-                                title="Description Incomplete" 
+                                title="Descriptions Incomplete" 
                                 content="Some of the descriptions below might be incomplete and thus inaccurate." />
                         {/if}
                         <div class="flex m-4 items-center">
@@ -226,9 +227,9 @@
                                         <img loading="lazy" alt="Icon" class="max-w-[96px]" class:invert={$lightMode} src={getImagekitUrl(pb.files.getUrl(sk, skIcon))} />
                                     {/each}
                                 </div>
-                                <div class="flex flex-col gap-2 description">
-                                    <h3 class="text-2xl">
-                                        {sk.name} • <span class="text-xl">{getSkillTypeString(sk.type)}</span>
+                                <div class="prose">
+                                    <h3 class="text-2xl mb-4">
+                                        {sk.name} • <span class="text-xl font-normal">{getSkillTypeString(sk.type)}</span>
                                         {#if sk.status != "OK"}
                                             <div 
                                                 class="badge" 
@@ -236,7 +237,6 @@
                                                 class:badge-warning={sk.status == "DRAFT"}>{sk.status || "TODO"}</div>
                                         {/if}
                                     </h3>
-                                    
                                     {#if showModifiedDescription}
                                         {@html Handlebars.compile(processDescription(sk.description))({...sk.values, level: level-1})}
                                     {:else}
@@ -251,7 +251,46 @@
                     {:else}
                     <AlertBanner 
                         type="warning" 
-                        title="Description Unavailable" 
+                        title="Skill Descriptions Unavailable" 
+                        content="This is usually caused by the character being unreleased yet, but it could also be that the skills haven't been updated yet." />
+                    {/if}
+                    {#if selectedChar.expand && selectedChar.expand.chains}
+                        {#if selectedChar.expand.skills && selectedChar.expand.skills.length > 0}
+                            <div class="divider"></div>
+                        {/if}
+                        {#each selectedChar.expand.chains as chns, idx (chns.id)}
+                            <div class="flex lg:flex-row flex-col gap-6">
+                                <div class="basis-24 flex-none rounded-xl">
+                                    {#if chns.icon}
+                                        <img loading="lazy" alt="Icon" class="max-w-[96px]" class:invert={$lightMode} src={getImagekitUrl(pb.files.getUrl(chns, chns.icon))} />
+                                    {/if}
+                                </div>
+                                <div class="flex flex-col gap-2 description">
+                                    <h3 class="text-2xl">
+                                        {chns.name} • <span class="text-xl">Sequence {chns.level}</span>
+                                        {#if chns.status != "OK"}
+                                            <div 
+                                                class="badge" 
+                                                class:badge-error={!chns.status || chns.status == "TODO"}
+                                                class:badge-warning={chns.status == "DRAFT"}>{chns.status || "TODO"}</div>
+                                        {/if}
+                                    </h3>
+                                    
+                                    {#if showModifiedDescription}
+                                        {@html Handlebars.compile(processDescription(chns.description))({...chns.values, level: level-1})}
+                                    {:else}
+                                        {@html Handlebars.compile(processDescription(chns.original_description))({...chns.values, level: level-1})}
+                                    {/if}
+                                </div>
+                            </div>
+                            {#if idx < selectedChar.expand.chains.length-1}
+                                <div class="divider"></div>
+                            {/if}
+                        {/each}
+                    {:else}
+                    <AlertBanner 
+                        type="warning" 
+                        title="Chain Descriptions Unavailable" 
                         content="This is usually caused by the character being unreleased yet, but it could also be that the skills haven't been updated yet." />
                     {/if}
                 </div>

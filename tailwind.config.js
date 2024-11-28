@@ -1,3 +1,6 @@
+import daisyui from 'daisyui'
+import twTypography from '@tailwindcss/typography'
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{html,js,svelte,ts}'],
@@ -5,8 +8,8 @@ export default {
     extend: {},
   },
   plugins: [
-    require('@tailwindcss/typography'),
-    require('daisyui'),
+    twTypography(),
+    daisyui,
   ],
   daisyui: {
     themes: ["winter", "dark"],

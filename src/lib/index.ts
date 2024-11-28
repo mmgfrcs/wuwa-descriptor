@@ -7,7 +7,7 @@ export function processDescription(desc: string) {
   desc = desc.replace(/(Electro DMG(?: Bonus)?)/g, '<span class="text-purple-400">$1</span>')
   desc = desc.replace(/(Havoc DMG(?: Bonus)?)/g, '<span class="text-rose-400">$1</span>')
   desc = desc.replace(/(Aero DMG(?: Bonus)?)/g, '<span class="text-emerald-400">$1</span>')
-  desc = desc.replace(/(<p><strong>)(.*)(<\/strong><\/p>)/g, '$1<span class="text-orange-400">$2</span>$3')
+  desc = desc.replace(/<p>(<strong>)(.*)(<\/strong>)<\/p>/g, '<h4>$1<span class="text-orange-400">$2</span>$3</h4>')
   return desc
 }
 
@@ -35,4 +35,8 @@ export function getSkillTypeString(str: string) {
 
 export function getImagekitUrl(pbUrl: string) {
   return pbUrl.replace("https://wuwadesc.pockethost.io/api/files", "https://ik.imagekit.io/wzvqps79m/wuwadesc-files")
+}
+
+export function toTitleCase(str: string) {
+  return str.split(" ").map(x=>x.charAt(0) + x.slice(1).toLowerCase()).join(" ")
 }
