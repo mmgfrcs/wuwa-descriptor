@@ -7,7 +7,7 @@ export function processDescription(desc: string) {
   desc = desc.replace(/(Electro DMG(?: Bonus)?)/g, '<span class="text-purple-400">$1</span>')
   desc = desc.replace(/(Havoc DMG(?: Bonus)?)/g, '<span class="text-rose-400">$1</span>')
   desc = desc.replace(/(Aero DMG(?: Bonus)?)/g, '<span class="text-emerald-400">$1</span>')
-  desc = desc.replace(/(<p><strong>)(.*)(<\/strong><\/p>)/g, '$1<span class="text-orange-400">$2</span>$3')
+  desc = desc.replace(/<p>(<strong>)(.*)(<\/strong>)<\/p>/g, '<h4>$1<span class="text-orange-400">$2</span>$3</h4>')
   return desc
 }
 

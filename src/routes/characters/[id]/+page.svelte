@@ -80,30 +80,36 @@
 								<img loading="lazy" alt="Icon" class:invert={$lightMode} src={getImagekitUrl(pb.files.getUrl(sk, skIcon))} />
 							{/each}
 						</div>
-						<div class="flex flex-1 flex-col gap-2 description">
-							<h3 class="text-2xl">{sk.name} • <span class="text-xl">{getSkillTypeString(sk.type)}</span></h3>
-							
-							{#if showModifiedDescription}
-									{@html Handlebars.compile(processDescription(sk.description))({...sk.values, level})}
-							{:else}
-									{@html Handlebars.compile(processDescription(sk.original_description))({...sk.values, level})}
-							{/if}
-						</div>
-						<div class="flex basis-1/3 flex-none flex-col gap-2">
-							<h3 class="text-2xl">Gameplay Notes</h3>
-							{#if sk.gameplay_notes != ""}
-								{@html sk.gameplay_notes}
-							{:else}
-								<p>(No gameplay notes)</p>
-							{/if}
-							{#if showModifiedDescription}
-								<h3 class="text-2xl mt-4">Description Notes</h3>
-								{#if sk.description_notes != ""}
-									{@html sk.description_notes}
+						<div class="flex-1">
+							<div class="prose">
+								<h3 class="text-2xl">{sk.name} • <span class="text-xl font-normal">{getSkillTypeString(sk.type)}</span></h3>
+								
+								{#if showModifiedDescription}
+										{@html Handlebars.compile(processDescription(sk.description))({...sk.values, level})}
 								{:else}
-									<p>(No description notes)</p>
+										{@html Handlebars.compile(processDescription(sk.original_description))({...sk.values, level})}
 								{/if}
-							{/if}
+							</div>
+
+						</div>
+						<div class="basis-1/3 flex-none">
+							<div class="prose">
+								<h3 class="text-2xl">Gameplay Notes</h3>
+								{#if sk.gameplay_notes != ""}
+									{@html sk.gameplay_notes}
+								{:else}
+									<p>(No gameplay notes)</p>
+								{/if}
+								{#if showModifiedDescription}
+									<h3 class="text-2xl">Description Notes</h3>
+									{#if sk.description_notes != ""}
+										{@html sk.description_notes}
+									{:else}
+										<p>(No description notes)</p>
+									{/if}
+								{/if}
+							</div>
+							
 						</div>
 				</div>
 				{#if idx < data.char.expand.skills.length-1}
@@ -117,13 +123,14 @@
 		{/if}
 		{#each data.char.expand.chains as ch, idx (ch.id)}
 				<div class="flex flex-row gap-6">
-						<div class="basis-24 flex-none rounded-xl">
-							{#if ch.icon}
-								<img loading="lazy" alt="Icon" class:invert={$lightMode} src={getImagekitUrl(pb.files.getUrl(ch, ch.icon))} />
-							{/if}
-						</div>
-						<div class="flex flex-1 flex-col gap-2 description">
-							<h3 class="text-2xl">{ch.name} • <span class="text-xl">Sequence {ch.level}</span></h3>
+					<div class="basis-24 flex-none rounded-xl">
+						{#if ch.icon}
+							<img loading="lazy" alt="Icon" class:invert={$lightMode} src={getImagekitUrl(pb.files.getUrl(ch, ch.icon))} />
+						{/if}
+					</div>
+					<div class="flex-1">
+						<div class="prose">
+							<h3 class="text-2xl">{ch.name} • <span class="text-xl font-normal">Sequence {ch.level}</span></h3>
 							
 							{#if showModifiedDescription}
 									{@html Handlebars.compile(processDescription(ch.description))({...ch.values, level})}
@@ -131,7 +138,10 @@
 									{@html Handlebars.compile(processDescription(ch.original_description))({...ch.values, level})}
 							{/if}
 						</div>
-						<div class="flex basis-1/3 flex-none flex-col gap-2">
+
+					</div>
+					<div class="basis-1/3 flex-none">
+						<div class="prose">
 							<h3 class="text-2xl">Gameplay Notes</h3>
 							{#if ch.gameplay_notes != ""}
 								{@html ch.gameplay_notes}
@@ -147,6 +157,7 @@
 								{/if}
 							{/if}
 						</div>
+					</div>
 				</div>
 				{#if idx < data.char.expand.skills.length-1}
 						<div class="divider"></div>
