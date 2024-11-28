@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Handlebars from 'handlebars'
-	import { getImagekitUrl, getSkillTypeString, processDescription } from "$lib";
+	import { getImagekitUrl, getSkillTypeString, processDescription, toTitleCase } from "$lib";
 	import lightMode from '$lib/stores/lightmode';
 	import pb from '$lib/pocketbase.js';
 	import {page} from "$app/stores"
@@ -19,6 +19,7 @@
 	<meta property="og:type" content="website" />
 	<meta property="og:title" content={data.char.name} />
 	<meta property="og:image" content={getImagekitUrl(pb.files.getUrl(data.char, data.char.bg))+"?tr=w-1280"} />
+	<meta property="og:description" content={`A ${toTitleCase(data.char.element)} ${toTitleCase(data.char.weapon)} character`} />
 	<meta property="twitter:card" content="summary_large_image">
 </svelte:head>
 
