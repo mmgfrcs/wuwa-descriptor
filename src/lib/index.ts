@@ -36,3 +36,7 @@ export function getSkillTypeString(str: string) {
 export function getImagekitUrl(pbUrl: string) {
   return pbUrl.replace("https://wuwadesc.pockethost.io/api/files", "https://ik.imagekit.io/wzvqps79m/wuwadesc-files")
 }
+
+export function toTitleCase(str: string) {
+  return str.split(" ").map(x=>x.charAt(0) + x.slice(1).toLowerCase()).join(" ")
+}
